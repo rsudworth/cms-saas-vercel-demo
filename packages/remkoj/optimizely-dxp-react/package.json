@@ -1,6 +1,6 @@
 {
   "name": "@remkoj/optimizely-dxp-react",
-  "version": "1.0.0-pre1.0",
+  "version": "1.0.0-pre1.1",
   "packageManager": "yarn@4.1.1",
   "private": true,
   "type": "module",
@@ -36,7 +36,7 @@
     "@remkoj/optimizely-graph-client": "workspace:^",
     "@types/crypto-js": "^4.2.2",
     "@types/node": "^20.11.30",
-    "@types/react": "^18.2.67",
+    "@types/react": "^18.2.71",
     "@types/react-dom": "18.2.22",
     "crypto-js": "^4.2.0",
     "graphql": "^16.8.1",
@@ -60,5 +60,6 @@
     "build": "tsc --build",
     "watch": "tsc --watch",
     "rebuild": "tsc --build --clean && tsc --build --force"
-  }
+  },
+  "stableVersion": "1.0.0-pre1.0"
 }

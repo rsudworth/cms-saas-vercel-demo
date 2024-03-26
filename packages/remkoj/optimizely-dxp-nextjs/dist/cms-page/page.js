@@ -26,7 +26,7 @@ export function createPage(factory, channel, options) {
             const resolver = new RouteResolver(client);
             return (await resolver.getRoutes()).map(r => {
                 return {
-                    lang: r.language,
+                    lang: channel.localeToSlug(r.language),
                     path: urlToPath(r.url, r.language)
                 };
             });
@@ -34,9 +34,7 @@ export function createPage(factory, channel, options) {
         generateMetadata: async ({ params: { lang, path } }, resolving) => {
             // Read variables from request            
             const client = clientFactory();
-            const requestPath = (path?.length ?? 0) > 0 ?
-                `/${lang ?? ""}/${path?.join("/") ?? ""}` :
-                `/${lang ?? ""}`;
+            const requestPath = buildRequestPath({ lang, path });
             const routeResolver = new RouteResolver(client);
             const metaResolver = new MetaDataResolver(client);
             // Resolve the route to a content link
@@ -68,7 +66,9 @@ export function createPage(factory, channel, options) {
             }
             return pageMetadata;
         },
-        CmsPage: async ({ params }) => {
+        CmsPage: async ({ params: { lang, path } }) => {
+            if (!lang || lang.length == 0)
+                return notFound();
             // Prepare the context
             const context = getServerContext();
             const client = context.client ?? clientFactory();
@@ -76,12 +76,9 @@ export function createPage(factory, channel, options) {
                 context.setOptimizelyGraphClient(client);
             context.setComponentFactory(factory);
             // Resolve the content based upon the route
-            const slug = params?.lang ?? defaultLocale.toLowerCase();
-            const requestPath = (params?.path?.length ?? 0) > 0 ?
-                `/${slug}/${params?.path?.join("/") ?? ""}` :
-                `/${slug}`;
-            const graphLocale = channel.slugToGraphLocale(slug);
-            const response = await getContentByPath(client, { path: requestPath, locale: graphLocale });
+            const requestPath = buildRequestPath({ lang, path });
+            const graphLocale = channel.slugToGraphLocale(lang);
+            const response = await getContentByPath(client, { path: requestPath, locale: graphLocale, siteId: channel.id });
             const info = (response.Content?.items ?? [])[0];
             context.setLocale(graphLocale);
             if (!info) {
@@ -102,4 +99,9 @@ export function createPage(factory, channel, options) {
         }
     };
     return pageDefintion;
+}
+function buildRequestPath({ lang, path }) {
+    return (path?.length ?? 0) > 0 ?
+        `/${lang ?? ""}/${path?.join("/") ?? ""}` :
+        `/${lang ?? ""}`;
 }

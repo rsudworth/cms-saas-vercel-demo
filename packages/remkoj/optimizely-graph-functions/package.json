@@ -2,7 +2,7 @@
   "name": "@remkoj/optimizely-graph-functions",
   "private": true,
   "license": "Apache-2.0",
-  "version": "1.0.0-pre1.0",
+  "version": "1.0.0-pre1.1",
   "packageManager": "yarn@4.1.1",
   "type": "commonjs",
   "main": "./dist/index.js",
@@ -50,5 +50,6 @@
     "@graphql-codegen/add": "*",
     "@graphql-codegen/client-preset": "*",
     "@remkoj/optimizely-graph-client": "*"
-  }
+  },
+  "stableVersion": "1.0.0-pre1.0"
 }

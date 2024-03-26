@@ -30,12 +30,12 @@ export class RouteResolver {
                 results = results.concat(page.Content?.items ?? []);
             }
         this._cgClient.restoreFlags();
-        return results.map(this.convertResponse);
+        return results.map(this.tryConvertResponse.bind(this)).filter(this.isNotNullOrUndefined);
     }
     async getContentInfoByPath(path, siteId) {
         if (this._cgClient.debug)
             console.log(`Resolving content info for ${path} on ${siteId ? "site " + siteId : "all sites"}`);
-        const resultSet = await this._cgClient.query({
+        const resultSet = await this._cgClient.request({
             document: GetRouteByPath.query,
             variables: {
                 path,
@@ -62,7 +62,7 @@ export class RouteResolver {
         };
         if (this._cgClient.debug)
             console.log("Resolving content by id:", JSON.stringify(variables));
-        const resultSet = await this._cgClient.query({
+        const resultSet = await this._cgClient.request({
             document: GetRouteById.query,
             variables
         });
@@ -119,6 +119,18 @@ export class RouteResolver {
             published: item.published ? new Date(item.published) : null,
             changed: item.changed ? new Date(item.changed) : null
         };
+    }
+    tryConvertResponse(item) {
+        try {
+            return this.convertResponse(item);
+        }
+        catch (e) {
+            console.error(`Unable to convert ${JSON.stringify(item)} to Route`, e);
+            return undefined;
+        }
+    }
+    isNotNullOrUndefined(input) {
+        return input != null && input != undefined;
     }
 }
 export default RouteResolver;

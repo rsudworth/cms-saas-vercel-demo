@@ -1,6 +1,6 @@
 import type { ContentLinkWithLocale, Route } from "./types.js";
 import { type IOptiGraphClient } from '../../client/index.js';
-import type { ContentGraphConfig } from '../../types.js';
+import type { OptimizelyGraphConfig } from '../../types.js';
 export declare class RouteResolver {
     private _cgClient;
     /**
@@ -9,13 +9,15 @@ export declare class RouteResolver {
      * @param client        ContentGraph configuration override
      * @param apolloConfig  Apollo Client configuration override
      */
-    constructor(clientOrConfig?: IOptiGraphClient | ContentGraphConfig);
+    constructor(clientOrConfig?: IOptiGraphClient | OptimizelyGraphConfig);
     getRoutes(siteId?: string): Promise<Route[]>;
     getContentInfoByPath(path: string, siteId?: null): Promise<undefined | Route>;
     getContentInfoById(contentId: string, locale: string): Promise<undefined | Route>;
     routeToContentLink(route: Route): ContentLinkWithLocale;
     protected parseIdString(id: string): [number, number | null];
     protected convertResponse(item: GetAllRoutes.Route): Route;
+    protected tryConvertResponse(item: GetAllRoutes.Route): Route | undefined;
+    protected isNotNullOrUndefined<T>(input: T | null | undefined): input is T;
 }
 export default RouteResolver;
 export declare namespace GetAllRoutes {

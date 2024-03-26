@@ -1,7 +1,7 @@
 import type { ContentLinkWithLocale, Route } from "./types.js"
 import { gql } from "graphql-request"
 import createClient, { type IOptiGraphClient, isContentGraphClient } from '../../client/index.js'
-import type { ContentGraphConfig } from '../../types.js'
+import type { OptimizelyGraphConfig } from '../../types.js'
 
 export class RouteResolver {
     private _cgClient : IOptiGraphClient
@@ -12,9 +12,8 @@ export class RouteResolver {
      * @param client        ContentGraph configuration override
      * @param apolloConfig  Apollo Client configuration override
      */
-    public constructor (clientOrConfig?: IOptiGraphClient | ContentGraphConfig)
+    public constructor (clientOrConfig?: IOptiGraphClient | OptimizelyGraphConfig)
     {
-
         this._cgClient = isContentGraphClient(clientOrConfig) ? clientOrConfig : createClient(clientOrConfig)
     }
 
@@ -41,7 +40,7 @@ export class RouteResolver {
             }
 
         this._cgClient.restoreFlags()
-        return results.map(this.convertResponse)
+        return results.map(this.tryConvertResponse.bind(this)).filter(this.isNotNullOrUndefined)
     }
 
     public async getContentInfoByPath(path: string, siteId?: null) : Promise<undefined | Route>
@@ -49,7 +48,7 @@ export class RouteResolver {
         if (this._cgClient.debug)
             console.log(`Resolving content info for ${ path } on ${ siteId ? "site " + siteId : "all sites"}`)
 
-        const resultSet = await this._cgClient.query<GetRouteByPath.Result, GetRouteByPath.Variables>({
+        const resultSet = await this._cgClient.request<GetRouteByPath.Result, GetRouteByPath.Variables>({
             document: GetRouteByPath.query,
             variables: {
                 path,
@@ -83,7 +82,7 @@ export class RouteResolver {
         if (this._cgClient.debug)
             console.log("Resolving content by id:", JSON.stringify(variables))
 
-        const resultSet = await this._cgClient.query<GetRouteById.Result, GetRouteById.Variables>({
+        const resultSet = await this._cgClient.request<GetRouteById.Result, GetRouteById.Variables>({
             document: GetRouteById.query,
             variables
         })
@@ -146,6 +145,21 @@ export class RouteResolver {
             published: item.published ? new Date(item.published) : null,
             changed: item.changed ? new Date(item.changed) : null
         }
+    }
+
+    protected tryConvertResponse(item: GetAllRoutes.Route) : Route | undefined
+    {
+        try {
+            return this.convertResponse(item)
+        } catch (e) {
+            console.error(`Unable to convert ${ JSON.stringify(item) } to Route`, e)
+            return undefined
+        }
+    }
+
+    protected isNotNullOrUndefined<T>(input: T | null | undefined) : input is T
+    {
+        return input != null && input != undefined
     }
 }
 

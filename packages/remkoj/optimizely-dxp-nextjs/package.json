@@ -1,6 +1,6 @@
 {
   "name": "@remkoj/optimizely-dxp-nextjs",
-  "version": "1.0.0-pre1.0",
+  "version": "1.0.0-pre1.1",
   "packageManager": "yarn@4.1.1",
   "private": true,
   "type": "module",
@@ -14,7 +14,7 @@
     "@remkoj/optimizely-dxp-react-server": "workspace:*",
     "@remkoj/optimizely-graph-client": "workspace:*",
     "@types/node": "^20.11.30",
-    "@types/react": "^18.2.67",
+    "@types/react": "^18.2.71",
     "@types/react-dom": "18.2.22",
     "deepmerge": "^4.3.1",
     "graphql": "^16.8.1",
@@ -43,5 +43,6 @@
     "build": "tsc --build",
     "watch": "tsc --watch",
     "rebuild": "tsc --build --clean && tsc --build --force"
-  }
+  },
+  "stableVersion": "1.0.0-pre1.0"
 }

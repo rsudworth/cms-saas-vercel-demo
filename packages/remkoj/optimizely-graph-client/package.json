@@ -1,6 +1,6 @@
 {
   "name": "@remkoj/optimizely-graph-client",
-  "version": "1.0.0-pre1.0",
+  "version": "1.0.0-pre1.1",
   "packageManager": "yarn@4.1.1",
   "private": true,
   "type": "module",
@@ -65,5 +65,6 @@
     "watch": "tsc --watch",
     "rebuild": "tsc --build --clean && tsc --build --force",
     "generate-admin": "openapi --input https://cg.optimizely.com/app/swagger/swagger.json --output ./src/admin-api/client --name OptimizelyGraphAdminApi && node ./build/update-imports.cjs"
-  }
+  },
+  "stableVersion": "1.0.0-pre1.0"
 }

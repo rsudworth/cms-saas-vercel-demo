@@ -1,6 +1,6 @@
 {
   "name": "@remkoj/optimizely-frontend",
-  "version": "1.0.0-pre1.0",
+  "version": "1.0.0-pre1.1",
   "packageManager": "yarn@4.1.1",
   "private": true,
   "license": "Apache-2.0",
@@ -37,5 +37,6 @@
     "uuid": "^9.0.1",
     "typescript": "^5.4.3",
     "undici": "^6.9.0"
-  }
+  },
+  "stableVersion": "1.0.0-pre1.0"
 }
