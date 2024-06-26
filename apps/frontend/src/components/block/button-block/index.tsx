@@ -1,19 +1,30 @@
 import type { ComponentProps } from "react";
-import type { Maybe, ButtonBlock, IContent, LinkDataFragment } from "@gql/graphql";
+import type {
+  Maybe,
+  ButtonBlock,
+  _IContent,
+  LinkDataFragment,
+} from "@gql/graphql";
 import Link from "next/link";
-import { urlToRelative } from '@components/shared/cms_link'
+import { urlToRelative } from "@components/shared/cms_link";
 
-type ButtonBlockType = Required<Omit<ButtonBlock, keyof IContent>>
-export type ButtonBlockComponentType = Omit<ComponentProps<typeof Link>, 'href' | 'className'> & {
-  className?: Maybe<string>
-  url?: Maybe<string> | {
-    base?: Maybe<string>
-    hierarchical?: Maybe<string>
-    default?: Maybe<string>
-  } | LinkDataFragment
-  buttonType?: ButtonBlockType["ButtonType"]
-  buttonVariant?: ButtonBlockType["ButtonVariant"]
-}
+type ButtonBlockType = Required<Omit<ButtonBlock, keyof _IContent>>;
+export type ButtonBlockComponentType = Omit<
+  ComponentProps<typeof Link>,
+  "href" | "className"
+> & {
+  className?: Maybe<string>;
+  url?:
+    | Maybe<string>
+    | {
+        base?: Maybe<string>;
+        hierarchical?: Maybe<string>;
+        default?: Maybe<string>;
+      }
+    | LinkDataFragment;
+  buttonType?: ButtonBlockType["ButtonType"];
+  buttonVariant?: ButtonBlockType["ButtonVariant"];
+};
 
 type ButtonTypes = {
   primary: string;
@@ -37,7 +48,8 @@ const Button: React.FC<ButtonBlockComponentType> = ({
 }) => {
   const buttonTypes: ButtonTypes = {
     primary: "btn--primary",
-    secondary: "btn--secondary [&>*]:dark:!bg-vulcan [&>*]:dark:!text-ghost-white",
+    secondary:
+      "btn--secondary [&>*]:dark:!bg-vulcan [&>*]:dark:!text-ghost-white",
   };
 
   const buttonVariants: ButtonVariants = {
@@ -45,17 +57,26 @@ const Button: React.FC<ButtonBlockComponentType> = ({
     cta: "btn--cta",
   };
 
-  const linkHref = (!url || url == '#') ? '#' : urlToRelative(typeof(url) == 'string' ? new URL(url) : new URL(url.default ?? '/', url.base ?? 'https://example.com'))
+  const linkHref =
+    !url || url == "#"
+      ? "#"
+      : urlToRelative(
+          typeof url == "string"
+            ? new URL(url)
+            : new URL(url.default ?? "/", url.base ?? "https://example.com")
+        );
 
   return (
     <Link
-      href={ linkHref }
+      href={linkHref}
       className={`${buttonTypes[buttonType ?? "primary"]} ${
         buttonVariants[buttonVariant ?? "default"]
       } ${className}`}
       {...props}
     >
-      <div className="btn__content dark:!bg-ghost-white dark:!border-ghost-white dark:!text-ghost-white dark:!text-vulcan">{children}</div>
+      <div className="btn__content dark:!bg-ghost-white dark:!border-ghost-white dark:!text-ghost-white dark:!text-vulcan">
+        {children}
+      </div>
     </Link>
   );
 };

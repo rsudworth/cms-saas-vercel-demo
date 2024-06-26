@@ -18,7 +18,7 @@ fragment MegaMenuItem on MegaMenuGroupBlock {
   }
 }
 
-fragment MenuItem on IContent {
+fragment MenuItem on _IContent {
   __typename
   ...MenuNavigationItem
   ...MenuCardItem
@@ -65,10 +65,10 @@ fragment MenuCardItem on CardBlock {
 }
 
 fragment LinkItemData on Link {
-    title
-    text
-    target
-    url {
-        ...LinkData
-    }
+  title
+  text
+  target
+  url {
+    ...LinkData
+  }
 }

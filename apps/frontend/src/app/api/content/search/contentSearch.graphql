@@ -1,5 +1,11 @@
-query searchContent($term: String!, $topInterest: String, $locale: [String!], $types: [String!], $pageSize: Int) {
-  Content(
+query searchContent(
+  $term: String!
+  $topInterest: String
+  $locale: [String!]
+  $types: [String!]
+  $pageSize: Int
+) {
+  _Content(
     where: {
       _or: [
         { _fulltext: { contains: $term } }
