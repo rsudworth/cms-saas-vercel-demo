@@ -9,10 +9,25 @@ import { StandardPageDataFragment } from "@gql/graphql";
 
 export const StandardPage: OptimizelyNextPage<StandardPageDataFragment> = ({
   contentLink,
-  data: { sptitle: title, spimage: image, spdescription: description, spsubtitle: subtitle }
+  data: {
+    sptitle: title,
+    spimage: image,
+    spdescription: description,
+    spsubtitle: subtitle,
+  },
 }) => {
-  const imageUrlData = useFragment(Schema.LinkDataFragmentDoc, image?.src)
-  const imageUrl = imageUrlData ? new URL(imageUrlData?.default ?? '/', imageUrlData?.base ?? 'https://example.com').href : undefined
+  const imageUrlData = useFragment(Schema.LinkDataFragmentDoc, image?.src);
+  // const imageUrl = imageUrlData
+  //   ? new URL(
+  //       imageUrlData?.default ?? "/",
+  //       imageUrlData?.base ?? "https://example.com"
+  //     ).href
+  //   : undefined;
+
+  const imageUrl =
+    imageUrlData?.default && imageUrlData?.base
+      ? new URL(imageUrlData?.default, imageUrlData?.base).href
+      : undefined;
 
   return (
     <>
@@ -37,8 +52,9 @@ export const StandardPage: OptimizelyNextPage<StandardPageDataFragment> = ({
                 className="text-[30px] leading-[36px] mt-[24px] mb-20"
                 dangerouslySetInnerHTML={{ __html: subtitle ?? "" }}
               ></p>
-              
-              <div className="dark:!text-ghost-white [&>*]:dark:!text-ghost-white"
+
+              <div
+                className="dark:!text-ghost-white [&>*]:dark:!text-ghost-white"
                 dangerouslySetInnerHTML={{ __html: description?.html ?? "" }}
               ></div>
 
