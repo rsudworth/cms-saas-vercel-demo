@@ -14,5 +14,3 @@
 .vercel
 .env*.local
 .vs/*
-
-apps/frontend/.env
